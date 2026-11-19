@@ -12,14 +12,22 @@
   // ---- scroll-scrubbed frame sequences ----
   var scenes = [].slice.call(document.querySelectorAll(".scene")).map(function (el) {
     var n = +el.dataset.frames, seq = el.dataset.seq, canvas = el.querySelector("canvas"), ctx = canvas.getContext("2d");
-    var frames = [], loaded = 0, last = -1;
-    for (var i = 1; i <= n; i++) {
-      var im = new Image();
-      im.decoding = "async";
-      im.src = "seq/" + seq + "/" + String(i).padStart(3, "0") + ".jpg";
-      im.onload = function () { loaded++; if (last < 0) draw(0); };
-      frames.push(im);
+    var frames = [], loaded = 0, last = -1, started = false;
+    // load this scene's frames only when it gets within about two screens of the viewport
+    function load() {
+      if (started) return; started = true;
+      for (var i = 1; i <= n; i++) {
+        var im = new Image();
+        im.decoding = "async";
+        im.src = "seq/" + seq + "/" + String(i).padStart(3, "0") + ".jpg";
+        im.onload = function () { loaded++; if (last < 0) draw(0); };
+        frames.push(im);
+      }
     }
+    if ("IntersectionObserver" in window) {
+      var lio = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { load(); lio.disconnect(); } }, { rootMargin: "200% 0px" });
+      lio.observe(el);
+    } else load();
     function size() {
       var dpr = Math.min(window.devicePixelRatio || 1, 2), b = canvas.getBoundingClientRect();
       canvas.width = Math.round(b.width * dpr); canvas.height = Math.round(b.height * dpr); last = -1;
