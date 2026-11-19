@@ -34,14 +34,32 @@ PRODUCTS = [
 ]
 SIZES = ["S", "M", "L", "XL"]
 
-def head(title, desc, depth=0):
+POLO_CHART = [("Shoulder", "44", "46", "48.5", "50"), ("Chest", "104", "108", "112", "116"), ("Length", "69", "71", "73.5", "77.5"),
+              ("Sleeve", "20", "20.5", "21.5", "22.5"), ("Sleeve opening", "19", "20.5", "21.5", "23")]
+HOODIE_M = [("Chest width (flat)", "63.5"), ("Body length", "58"), ("Sleeve", "53")]
+JOGGERS_M = [("Waist (flat, relaxed)", "38"), ("Rise", "35.5"), ("Inseam", "80"), ("Leg opening", "28.5")]
+
+def size_guide(slug):
+    def m_table(rows, title):
+        r = "".join(f"<tr><td>{a}</td><td>{b}</td></tr>" for a, b in rows)
+        return f'<p class="small"><strong>{title}</strong>, size M, cm</p><table class="sizes"><tr><th></th><th>M</th></tr>{r}</table>'
+    if slug.startswith("polo"):
+        r = "".join(f"<tr><td>{a}</td><td>{b}</td><td>{c}</td><td>{d}</td><td>{e}</td></tr>" for a, b, c, d, e in POLO_CHART)
+        return f'<table class="sizes"><tr><th>cm, laid flat</th><th>S</th><th>M</th><th>L</th><th>XL</th></tr>{r}</table><p class="small">Regular fit. Between sizes, go up one.</p>'
+    note = '<p class="small">Cropped, boxy fit. Measurements from the tech pack for size M; full S to XL grading is being confirmed with the factory. Message us on Instagram for your size.</p>'
+    if slug == "hoodie": return m_table(HOODIE_M, "Hoodie") + note
+    if slug == "joggers": return m_table(JOGGERS_M, "Joggers") + note
+    return m_table(HOODIE_M, "Hoodie") + m_table(JOGGERS_M, "Joggers") + note
+
+def head(title, desc, depth=0, path="", image="img/hero-1.jpg"):
     p = "../" * depth
     return f"""<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}">
-<meta property="og:image" content="https://finaljudgment.store/img/hero-1.jpg">
+<meta property="og:image" content="https://finaljudgment.store/{image}"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://finaljudgment.store/{path}">
 <link rel="icon" href="{p}img/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -121,7 +139,7 @@ def simple_card(p):
 
 def early_access():
     """The bio-link page: the original simple early access layout."""
-    return head("Final Judgment | Early access", "Revelations. Pre-orders open 27.11, 09:00 GMT. Join the list for early access.") + f"""
+    return head("Final Judgment | Early access", "Revelations. Pre-orders open 27.11, 09:00 GMT. Join the list for early access.", 0, "access") + f"""
 <main>
 <section class="hero">
 <img class="hero-img" src="img/hero-1.jpg" alt="Final Judgment stars on a rooftop at blue hour">
@@ -135,6 +153,15 @@ def early_access():
 {SIGNUP.replace('<h2 class="big reveal">Join the list</h2>', '<h2>Join the list</h2>')}
 </main>""" + foot()
 
+import json
+def jsonld(p):
+    d = {"@context": "https://schema.org", "@type": "Product", "name": p["name"].replace("\u201c", "").replace("\u201d", ""),
+         "image": [f"https://finaljudgment.store/img/{p['slug']}-{i}.jpg" for i in range(1, 4)], "description": p["blurb"],
+         "brand": {"@type": "Brand", "name": "Final Judgment"},
+         "offers": {"@type": "Offer", "priceCurrency": "GBP", "price": str(p["price"]), "availability": "https://schema.org/PreOrder",
+                    "url": f"https://finaljudgment.store/products/{p['slug']}.html"}}
+    return '<script type="application/ld+json">' + json.dumps(d) + "</script>\n"
+
 def product(p):
     imgs = "".join(f'<img src="../img/{p["slug"]}-{i}.jpg" alt="{html.escape(p["name"])} view {i}" loading="{"eager" if i==1 else "lazy"}">' for i in range(1, p["imgs"]+1))
     def sel(label, name):
@@ -143,7 +170,7 @@ def product(p):
     sizes = sel("Hoodie size", "size_top") + sel("Joggers size", "size_bottom") if p.get("sets") else sel("Size", "size")
     was = f' <s>&pound;{p["was"]}</s>' if p.get("was") else ""
     det = "".join(f"<li>{d}</li>" for d in p["details"])
-    return head(f'{p["name"]} | Final Judgment', p["blurb"], 1) + f"""
+    return head(f'{p["name"]} | Final Judgment', p["blurb"], 1, f'products/{p["slug"]}.html', f'img/{p["slug"]}-1.jpg') + jsonld(p) + f"""
 <main class="product" data-slug="{p['slug']}">
 <div class="gallery">{imgs}</div>
 <div class="info">
@@ -154,7 +181,7 @@ def product(p):
 <p class="msg" role="status"></p></form>
 <p class="small">{SHIP}</p>
 <ul class="details">{det}</ul>
-<details><summary>Size guide</summary><p class="small">Boxy, true-to-size fit. Between sizes, size down for a cropped look. Full measurements coming before 27.11; ask us on Instagram in the meantime.</p></details>
+<details><summary>Size guide</summary>{size_guide(p["slug"])}</details>
 <details><summary>Shipping &amp; returns</summary><p class="small">UK &pound;3.50, EU &pound;10, US/CA &pound;14. 14-day returns once it arrives. <a href="../policies/shipping.html">Shipping</a> &middot; <a href="../policies/returns.html">Returns</a></p></details>
 <p class="small note">{NOTE}</p>
 </div></main>
@@ -194,4 +221,10 @@ if __name__ == "__main__":
         if f.endswith(".md"):
             md = open(f"policies_src/{f}").read(); title = md.splitlines()[0].lstrip("# ").strip()
             open(f"policies/{f[:-3]}.html", "w").write(policy(f[:-3], title, md))
+    nf = head("Not found | Final Judgment", "Page not found") + '<main class="notfound"><div><h1>Nothing here.</h1><p class="small">The page moved or never existed.</p><a class="btn" href="/">Back to the drop</a></div></main>' + foot()
+    for a in ['="img/', '="style.css', '="config.js', '="site.js', '="motion.js', '="index.html', '="policies/']: nf = nf.replace(a, a[:2] + "/" + a[2:])
+    open("404.html", "w").write(nf)
+    urls = ["", "access"] + [f"products/{p['slug']}.html" for p in PRODUCTS] + [f"policies/{f[:-3]}.html" for f in os.listdir("policies_src") if f.endswith(".md")]
+    open("sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(f"<url><loc>https://finaljudgment.store/{u}</loc></url>" for u in urls) + "</urlset>\n")
+    open("robots.txt", "w").write("User-agent: *\nAllow: /\nSitemap: https://finaljudgment.store/sitemap.xml\n")
     print("built")
