@@ -114,6 +114,27 @@ def index():
 {SIGNUP}
 </main>""" + foot()
 
+def simple_card(p):
+    was = f' <s>&pound;{p["was"]}</s>' if p.get("was") else ""
+    return f"""<a class="card" href="products/{p['slug']}.html"><img src="img/{p['slug']}-1.jpg" alt="{html.escape(p['name'])}" loading="lazy">
+<span class="name">{p['name']}</span><span class="price">&pound;{p['price']}{was}</span></a>"""
+
+def early_access():
+    """The bio-link page: the original simple early access layout."""
+    return head("Final Judgment | Early access", "Revelations. Pre-orders open 27.11, 09:00 GMT. Join the list for early access.") + f"""
+<main>
+<section class="hero">
+<img class="hero-img" src="img/hero-1.jpg" alt="Final Judgment stars on a rooftop at blue hour">
+<div class="hero-copy">
+<p class="eyebrow">the drop</p><h1>Revelations</h1>
+<div class="countdown" aria-live="polite"><span data-d>--</span>d <span data-h>--</span>h <span data-m>--</span>m <span data-s>--</span>s</div>
+<p class="when">pre-orders open 27.11 &middot; 09:00 GMT</p>
+<a class="btn" href="#list">Get early access</a>
+</div></section>
+<section id="drop" class="drop"><h2>The pieces</h2><div class="grid">{''.join(simple_card(p) for p in PRODUCTS)}</div></section>
+{SIGNUP.replace('<h2 class="big reveal">Join the list</h2>', '<h2>Join the list</h2>')}
+</main>""" + foot()
+
 def product(p):
     imgs = "".join(f'<img src="../img/{p["slug"]}-{i}.jpg" alt="{html.escape(p["name"])} view {i}" loading="{"eager" if i==1 else "lazy"}">' for i in range(1, p["imgs"]+1))
     def sel(label, name):
@@ -167,6 +188,7 @@ def policy(slug, title, md):
 if __name__ == "__main__":
     os.makedirs("products", exist_ok=True); os.makedirs("policies", exist_ok=True)
     open("index.html", "w").write(index())
+    open("access.html", "w").write(early_access().replace('href="index.html#drop"', 'href="#drop"').replace('href="index.html#list"', 'href="#list"').replace('class="brand"', 'class="brand"'))
     for p in PRODUCTS: open(f"products/{p['slug']}.html", "w").write(product(p))
     for f in os.listdir("policies_src"):
         if f.endswith(".md"):

@@ -46,7 +46,7 @@
   function frame() {
     var y = window.scrollY;
     if (bar) bar.style.transform = "scaleX(" + clamp(y / (document.documentElement.scrollHeight - vh()), 0, 1) + ")";
-    if (hero && !reduce) {
+    if (hero && heroTitle && !reduce) {
       var hp = clamp(y / hero.offsetHeight, 0, 1);
       heroImg.style.transform = "scale(" + (1 + hp * 0.25) + ") translateY(" + hp * 6 + "%)";
       heroTitle.style.transform = "scale(" + (1 + hp * 1.4) + ")";
