@@ -25,7 +25,18 @@
       if (phone && phone.charAt(0) === "0") phone = "+44" + phone.slice(1);
       if (phone && !/^\+\d{8,15}$/.test(phone)) { msg.textContent = "use your full mobile, e.g. +44 7..."; return; }
       var cfg = window.FJ || {};
-      if (!cfg.klaviyoCompanyId || !cfg.klaviyoListId) { msg.textContent = "list opens very soon, check back in a bit"; return; }
+      if (!cfg.klaviyoCompanyId || !cfg.klaviyoListId) {
+        // until Klaviyo is live: relay the signup to the brand inbox via FormSubmit
+        msg.textContent = "adding you...";
+        fetch("https://formsubmit.co/ajax/" + (cfg.fallbackEmail || "iudiciumfinale@gmail.com"), {
+          method: "POST", headers: { "content-type": "application/json", accept: "application/json" },
+          body: JSON.stringify({ _subject: "FJ early access signup", _template: "table", _captcha: "false", email: email, phone: phone || "", sms_consent: phone && form.sms.checked ? "yes" : "no", page: location.pathname })
+        }).then(function (r) { return r.json(); }).then(function (d) {
+          if (d && (d.success === "true" || d.success === true)) { msg.textContent = "you're in. watch your inbox on 27.11."; form.reset(); if (window.fbq) fbq("track", "Lead"); }
+          else msg.textContent = "something went wrong, try again";
+        }).catch(function () { msg.textContent = "something went wrong, try again"; });
+        return;
+      }
       var subs = { email: { marketing: { consent: "SUBSCRIBED" } } };
       var attrs = { email: email, subscriptions: subs };
       if (phone && form.sms.checked) { attrs.phone_number = phone; subs.sms = { marketing: { consent: "SUBSCRIBED" } }; }

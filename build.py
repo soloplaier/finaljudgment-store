@@ -139,7 +139,7 @@ def simple_card(p):
 
 def early_access():
     """The bio-link page: the original simple early access layout."""
-    return head("Final Judgment | Early access", "Revelations. Pre-orders open 27.11, 09:00 GMT. Join the list for early access.", 0, "access") + f"""
+    return head("Final Judgment | Early access", "Revelations. Pre-orders open 27.11, 09:00 GMT. Join the list for early access.", 0, "revelations") + f"""
 <main>
 <section class="hero">
 <img class="hero-img" src="img/hero-1.jpg" alt="Final Judgment stars on a rooftop at blue hour">
@@ -215,7 +215,7 @@ def policy(slug, title, md):
 if __name__ == "__main__":
     os.makedirs("products", exist_ok=True); os.makedirs("policies", exist_ok=True)
     open("index.html", "w").write(index())
-    open("access.html", "w").write(early_access().replace('href="index.html#drop"', 'href="#drop"').replace('href="index.html#list"', 'href="#list"').replace('class="brand"', 'class="brand"'))
+    open("revelations.html", "w").write(early_access().replace('href="index.html#drop"', 'href="#drop"').replace('href="index.html#list"', 'href="#list"').replace('class="brand"', 'class="brand"'))
     for p in PRODUCTS: open(f"products/{p['slug']}.html", "w").write(product(p))
     for f in os.listdir("policies_src"):
         if f.endswith(".md"):
@@ -224,7 +224,7 @@ if __name__ == "__main__":
     nf = head("Not found | Final Judgment", "Page not found") + '<main class="notfound"><div><h1>Nothing here.</h1><p class="small">The page moved or never existed.</p><a class="btn" href="/">Back to the drop</a></div></main>' + foot()
     for a in ['="img/', '="style.css', '="config.js', '="site.js', '="motion.js', '="index.html', '="policies/']: nf = nf.replace(a, a[:2] + "/" + a[2:])
     open("404.html", "w").write(nf)
-    urls = ["", "access"] + [f"products/{p['slug']}.html" for p in PRODUCTS] + [f"policies/{f[:-3]}.html" for f in os.listdir("policies_src") if f.endswith(".md")]
+    urls = ["", "revelations"] + [f"products/{p['slug']}.html" for p in PRODUCTS] + [f"policies/{f[:-3]}.html" for f in os.listdir("policies_src") if f.endswith(".md")]
     open("sitemap.xml", "w").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join(f"<url><loc>https://finaljudgment.store/{u}</loc></url>" for u in urls) + "</urlset>\n")
     open("robots.txt", "w").write("User-agent: *\nAllow: /\nSitemap: https://finaljudgment.store/sitemap.xml\n")
     print("built")

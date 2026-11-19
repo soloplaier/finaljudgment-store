@@ -17,6 +17,7 @@ Final Judgment is run by Tommaso Cristoni, a sole trader in England, and is the 
 
 ## Who we share it with
 - Klaviyo, which sends our emails and texts.
+- FormSubmit, which forwards new sign-ups to our inbox until our mailing system is live.
 - Stripe, which processes payments.
 - Meta, for ad measurement.
 - Delivery carriers, to ship your order.
