@@ -47,7 +47,7 @@ def head(title, desc, depth=0):
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{p}style.css">
 <script>!function(f,b,e,v,n,t,s){{if(f.fbq)return;n=f.fbq=function(){{n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)}};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','{PIXEL}');fbq('track','PageView');</script>
-<script src="{p}config.js"></script><script defer src="{p}site.js"></script>
+<script src="{p}config.js"></script><script defer src="{p}site.js"></script><script defer src="{p}motion.js"></script>
 </head><body data-launch="{LAUNCH}">
 <header class="top"><a href="{p}index.html" class="brand"><img src="{p}img/logo.png" alt="Final Judgment"></a>
 <nav><a href="{p}index.html#drop">Drop</a><a href="{p}index.html#list">Join the list</a></nav></header>
@@ -63,7 +63,7 @@ def foot(depth=0):
 </body></html>"""
 
 SIGNUP = """<section id="list" class="list">
-<h2>Join the list</h2>
+<h2 class="big reveal">Join the list</h2>
 <p>Early access when pre-orders open, and nothing else. Text first, email second.</p>
 <form class="signup" novalidate>
 <input type="email" name="email" placeholder="email" autocomplete="email" required>
@@ -77,21 +77,40 @@ SIGNUP = """<section id="list" class="list">
 
 def card(p):
     was = f' <s>&pound;{p["was"]}</s>' if p.get("was") else ""
-    return f"""<a class="card" href="products/{p['slug']}.html"><img src="img/{p['slug']}-1.jpg" alt="{html.escape(p['name'])}" loading="lazy">
+    return f"""<a class="card reveal" href="products/{p['slug']}.html"><span class="card-img"><img src="img/{p['slug']}-1.jpg" alt="{html.escape(p['name'])}" loading="lazy"><img class="alt" src="img/{p['slug']}-2.jpg" alt="" loading="lazy"></span>
 <span class="name">{p['name']}</span><span class="price">&pound;{p['price']}{was}</span></a>"""
 
+def scene(sid, seq, kicker, title, lines, href, cta):
+    steps = "".join(f'<p class="step" data-from="{i/len(lines):.2f}" data-to="{(i+1)/len(lines):.2f}">{l}</p>' for i, l in enumerate(lines))
+    return f"""<section class="scene" id="{sid}" data-seq="{seq}" data-frames="61">
+<div class="scene-pin">
+<div class="scene-media"><canvas></canvas></div>
+<div class="scene-copy"><p class="eyebrow">{kicker}</p><h2>{title}</h2><div class="steps">{steps}</div>
+<a class="btn ghost" href="{href}">{cta}</a></div>
+</div></section>"""
+
+MARQUEE = '<div class="marquee" aria-hidden="true"><div class="marquee-track">' + ("<span>FINAL JUDGMENT</span><span class=\"star\">&#10022;</span><span>REVELATIONS</span><span class=\"star\">&#10022;</span>" * 6) + "</div></div>"
+
 def index():
+    world = "".join(f'<figure class="w-item"><img src="img/world-{i}.jpg" alt="" loading="lazy"></figure>' for i in range(1, 6))
     return head("Final Judgment | Revelations", "Revelations. Pre-orders open 27.11, 09:00 GMT. Faux fur tracksuit and Guardian Angel polos.") + f"""
+<div class="progress" aria-hidden="true"></div>
 <main>
 <section class="hero">
-<img class="hero-img" src="img/hero-1.jpg" alt="Final Judgment tracksuit">
+<div class="hero-media"><img class="hero-img" src="img/hero-1.jpg" alt="Final Judgment stars on a rooftop at blue hour"></div>
 <div class="hero-copy">
-<p class="eyebrow">the drop</p><h1>Revelations</h1>
+<p class="eyebrow">the drop</p><h1 class="hero-title">Revelations</h1>
 <div class="countdown" aria-live="polite"><span data-d>--</span>d <span data-h>--</span>h <span data-m>--</span>m <span data-s>--</span>s</div>
 <p class="when">pre-orders open 27.11 &middot; 09:00 GMT</p>
 <a class="btn" href="#list">Get early access</a>
-</div></section>
-<section id="drop" class="drop"><h2>The pieces</h2><div class="grid">{''.join(card(p) for p in PRODUCTS)}</div></section>
+</div>
+<div class="scroll-cue" aria-hidden="true">scroll</div></section>
+{MARQUEE}
+{scene("s-tracksuit", "hero", "the set", "The Tracksuit", ["two pieces. one verdict.", "a sword down each leg.", "faux fur on the hood.", "&pound;195 for the set."], "products/tracksuit.html", "See the tracksuit")}
+{scene("s-fur", "fur", "the hoodie", "Hood up.", ["blonde faux fur.", "6 snap buttons.", "fur on. fur off.", "sword down both sleeves."], "products/hoodie.html", "See the hoodie")}
+{scene("s-polo", "polo", "the polo", "Guardian Angel", ["gold crest. gold script.", "the angel with the sword.", "33 on both sleeves.", "black or white."], "products/polo-white.html", "See the polo")}
+<section class="world"><div class="world-pin"><h2 class="world-title">The world</h2><div class="world-track">{world}</div></div></section>
+<section id="drop" class="drop"><h2 class="big reveal">The pieces</h2><div class="grid">{''.join(card(p) for p in PRODUCTS)}</div></section>
 {SIGNUP}
 </main>""" + foot()
 
