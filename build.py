@@ -7,7 +7,7 @@ PIXEL = "1747577036687004"
 IG = "https://www.instagram.com/finaljudgementt/"
 EMAIL = "iudiciumfinale@gmail.com"
 NOTE = "Digital rendering. Final product may vary slightly."
-SHIP = "Pre-order. Made to order, target dispatch late January 2027. Cancel any time before it ships for a full refund."
+SHIP = "Pre-order. Made to order, target dispatch late February 2027. Cancel any time before it ships for a full refund."
 
 PRODUCTS = [
   dict(slug="tracksuit", name="“Final Judgment” Tracksuit", price=195, was=210, imgs=6,
