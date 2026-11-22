@@ -3,7 +3,7 @@
 Last updated: November 2026
 
 ### Pre-orders
-Pre-order items are made to order after the pre-order window closes. The current drop is open from 27 November to 11 December 2026, and our target is to ship in late January 2027. This date is a target, not a guarantee. If it moves, we will email you with the new date, and you can still cancel for a full refund at any time before your order ships.
+Pre-order items are made to order after the pre-order window closes. The current drop is open from 25 December 2026 to 8 January 2027, and our target is to ship in late February 2027. This date is a target, not a guarantee. If it moves, we will email you with the new date, and you can still cancel for a full refund at any time before your order ships.
 
 If your order contains both pre-order and in-stock items, we ship everything together when the pre-order items are ready, unless you ask us to split it.
 

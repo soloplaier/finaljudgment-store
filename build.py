@@ -2,7 +2,7 @@
 """Builds the static Final Judgment site. Edit PRODUCTS / config.js, then run: python3 build.py"""
 import os, html
 
-LAUNCH = "2026-11-27T09:00:00Z"
+LAUNCH = "2026-12-25T09:00:00Z"
 PIXEL = "1747577036687004"
 IG = "https://www.instagram.com/finaljudgementt/"
 EMAIL = "iudiciumfinale@gmail.com"
@@ -111,7 +111,7 @@ MARQUEE = '<div class="marquee" aria-hidden="true"><div class="marquee-track">' 
 
 def index():
     world = "".join(f'<figure class="w-item"><img src="img/world-{i}.jpg" alt="" loading="lazy"></figure>' for i in range(1, 6))
-    return head("Final Judgment | Revelations", "Revelations. Pre-orders open 27.11, 09:00 GMT. Faux fur tracksuit and Guardian Angel polos.") + f"""
+    return head("Final Judgment | Revelations", "Revelations. Pre-orders open 25.12, 09:00 GMT. Faux fur tracksuit and Guardian Angel polos.") + f"""
 <div class="progress" aria-hidden="true"></div>
 <main>
 <section class="hero">
@@ -119,7 +119,7 @@ def index():
 <div class="hero-copy">
 <p class="eyebrow">the drop</p><h1 class="hero-title">Revelations</h1>
 <div class="countdown" aria-live="polite"><span data-d>--</span>d <span data-h>--</span>h <span data-m>--</span>m <span data-s>--</span>s</div>
-<p class="when">pre-orders open 27.11 &middot; 09:00 GMT</p>
+<p class="when">pre-orders open 25.12 &middot; 09:00 GMT</p>
 <a class="btn" href="#list">Get early access</a>
 </div>
 <div class="scroll-cue" aria-hidden="true">scroll</div></section>
@@ -139,14 +139,14 @@ def simple_card(p):
 
 def early_access():
     """The bio-link page: the original simple early access layout."""
-    return head("Final Judgment | Early access", "Revelations. Pre-orders open 27.11, 09:00 GMT. Join the list for early access.", 0, "revelations") + f"""
+    return head("Final Judgment | Early access", "Revelations. Pre-orders open 25.12, 09:00 GMT. Join the list for early access.", 0, "revelations") + f"""
 <main>
 <section class="hero">
 <img class="hero-img" src="img/hero-1.jpg" alt="Final Judgment stars on a rooftop at blue hour">
 <div class="hero-copy">
 <p class="eyebrow">the drop</p><h1>Revelations</h1>
 <div class="countdown" aria-live="polite"><span data-d>--</span>d <span data-h>--</span>h <span data-m>--</span>m <span data-s>--</span>s</div>
-<p class="when">pre-orders open 27.11 &middot; 09:00 GMT</p>
+<p class="when">pre-orders open 25.12 &middot; 09:00 GMT</p>
 <a class="btn" href="#list">Get early access</a>
 </div></section>
 <section id="drop" class="drop"><h2>The pieces</h2><div class="grid">{''.join(simple_card(p) for p in PRODUCTS)}</div></section>
@@ -177,7 +177,7 @@ def product(p):
 <h1>{p['name']}</h1><p class="price">&pound;{p['price']}{was}</p>
 <p>{p['blurb']}</p>
 <form class="buy">{sizes}
-<button type="submit" class="btn buy-btn" disabled>Pre-orders open 27.11</button>
+<button type="submit" class="btn buy-btn" disabled>Pre-orders open 25.12</button>
 <p class="msg" role="status"></p></form>
 <p class="small">{SHIP}</p>
 <ul class="details">{det}</ul>

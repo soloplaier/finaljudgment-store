@@ -32,7 +32,7 @@
           method: "POST", headers: { "content-type": "application/json", accept: "application/json" },
           body: JSON.stringify({ _subject: "FJ early access signup", _template: "table", _captcha: "false", email: email, phone: phone || "", sms_consent: phone && form.sms.checked ? "yes" : "no", page: location.pathname })
         }).then(function (r) { return r.json(); }).then(function (d) {
-          if (d && (d.success === "true" || d.success === true)) { msg.textContent = "you're in. watch your inbox on 27.11."; form.reset(); if (window.fbq) fbq("track", "Lead"); }
+          if (d && (d.success === "true" || d.success === true)) { msg.textContent = "you're in. watch your inbox on 25.12."; form.reset(); if (window.fbq) fbq("track", "Lead"); }
           else msg.textContent = "something went wrong, try again";
         }).catch(function () { msg.textContent = "something went wrong, try again"; });
         return;
@@ -46,7 +46,7 @@
       fetch("https://a.klaviyo.com/client/subscriptions?company_id=" + encodeURIComponent(cfg.klaviyoCompanyId), {
         method: "POST", headers: { "content-type": "application/vnd.api+json", revision: "2024-10-15" }, body: JSON.stringify(body)
       }).then(function (r) {
-        if (r.ok || r.status === 202) { msg.textContent = "you're in. watch your texts on 27.11."; form.reset(); if (window.fbq) fbq("track", "Lead"); }
+        if (r.ok || r.status === 202) { msg.textContent = "you're in. watch your texts on 25.12."; form.reset(); if (window.fbq) fbq("track", "Lead"); }
         else msg.textContent = "something went wrong, try again";
       }).catch(function () { msg.textContent = "something went wrong, try again"; });
     });
@@ -63,7 +63,7 @@
       var key = form.size ? form.size.value : (form.size_top.value && form.size_bottom.value ? form.size_top.value + "/" + form.size_bottom.value : "");
       if (!key) { msg.textContent = "pick a size first"; return; }
       var url = links[key];
-      if (!url) { msg.textContent = "checkout opens 27.11, 09:00 GMT"; return; }
+      if (!url) { msg.textContent = "checkout opens 25.12, 09:00 GMT"; return; }
       if (window.fbq) fbq("track", "InitiateCheckout");
       location.href = url;
     });
